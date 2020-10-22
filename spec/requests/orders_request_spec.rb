@@ -2,16 +2,17 @@ require 'rails_helper'
 
 RSpec.describe "Orders", type: :request do
 #subject { Customer.new(first_name: "Jack", last_name: "Smith", phone: "8889995678", email: "jsmith@sample.com" )}
-subject { Order.new( product_name: "gears", product_count: 7, customer: FactoryBot.create(:customer))}
+#subject { Order.new( product_name: "gears", product_count: 7, customer: FactoryBot.create(:customer))}
   describe "get orders_path" do
     it "renders the index view" do
-      FactoryBot.create_list(:order, 10)
+      FactoryBot.create_list(:customer, 1)
       get orders_path
       expect(response.status).to eq(200)
     end
   end
   describe "get order_path" do
     it "renders the :show template" do
+	  #customer = FactoryBot.create_list(:customer, 1)
       order = FactoryBot.create(:order)
       get order_path(id: order.id)
       expect(response.status).to eq(200)
@@ -23,11 +24,20 @@ subject { Order.new( product_name: "gears", product_count: 7, customer: FactoryB
   end
 
   describe "get new_order_path" do
-    it "renders the :new template"
-  end
+    it "renders the :new template" do
+       get new_order_path
+       expect(response).to be_success
+       expect(response).to render_template(:new)
+    end
+    end
+
   describe "get edit_order_path" do
-    it "renders the :edit template"
-  end 
+    it "renders the :edit template" do
+        order = FactoryBot.create(:order)
+        get edit_order_path(id: order.id)
+        expect(response.status).to eq(200)
+     end
+    end
   
   describe "post orders_path with valid data" do
     it "saves a new entry and redirects to the show path for the entry" do
@@ -52,7 +62,7 @@ subject { Order.new( product_name: "gears", product_count: 7, customer: FactoryB
 	  order = FactoryBot.create(:order)
       put order_path(id: order.id), params: {order: { product_count: "letters"}}
       order.reload
-      expect(order.email).to_not eq("letters")
+      expect(order.product_count).to_not eq("letters")
       expect(response.status).to eq(200)
     end
   end

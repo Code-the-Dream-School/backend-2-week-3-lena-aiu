@@ -18,12 +18,23 @@ RSpec.describe "CustomersControllers", type: :request do
       expect(response).to redirect_to customers_path
     end
   end
+  
   describe "get new_customer_path" do
-    it "renders the :new template"
+    it "renders the :new template" do
+       get new_customer_path
+       expect(response).to be_success
+       expect(response).to render_template(:new)
+    end
   end
+
   describe "get edit_customer_path" do
-    it "renders the :edit template"
-  end
+    it "renders the :edit template" do
+        customer = FactoryBot.create(:customer)
+        get edit_customer_path(id: customer.id)
+        expect(response.status).to eq(200)
+     end
+    end
+
   describe "post customers_path with valid data" do
     it "saves a new entry and redirects to the show path for the entry" do
       customer_attributes = FactoryBot.attributes_for(:customer)
